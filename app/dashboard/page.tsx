@@ -5,8 +5,15 @@ export default async function Dashboard() {
   const supabase = await createClient();
 
   // Fetch stats
-  const { data: leadsData } = await supabase.from("leads").select("status");
+  const { data: leadsData, error: statsError } = await supabase.from("leads").select("status");
   
+  console.log("Raw leadsData:", leadsData);
+  
+  if (statsError) {
+    console.error("Supabase Stats Error:", statsError);
+  }
+
+
   const stats = { HOT: 0, WARM: 0, COLD: 0, TOTAL: 0 };
   leadsData?.forEach((d: any) => {
     stats[d.status as keyof typeof stats] = (stats[d.status as keyof typeof stats] || 0) + 1;
@@ -14,16 +21,35 @@ export default async function Dashboard() {
   });
 
   // Fetch recent leads
-  const { data: recentLeads } = await supabase
+  const { data: recentLeads, error: leadsError } = await supabase
     .from("leads")
     .select("*")
     .order("created_at", { ascending: false })
     .limit(5);
 
+  if (leadsError) {
+    console.error("Supabase Leads Error:", leadsError);
+  }
+
+
   return (
     <div className="p-8 max-w-7xl mx-auto space-y-12">
+      {/* Error Notifications */}
+      {(statsError || leadsError) && (
+        <div className="bg-red-500/10 border border-red-500/50 p-4 rounded-lg text-red-400">
+          <p className="font-bold">⚠️ Connection Issue</p>
+          <p className="text-sm">
+            {statsError?.message || leadsError?.message || "Failed to fetch data from Supabase."}
+          </p>
+          <p className="text-xs mt-2 opacity-50">
+            Check your RLS policies or if the table 'leads' exists.
+          </p>
+        </div>
+      )}
+
       {/* Header */}
       <div className="flex justify-between items-end animate-fade-in">
+
         <div>
           <h1 className="text-4xl font-bold gradient-text">CRM Dashboard</h1>
           <p className="text-gray-400 mt-2">Welcome back! Here's what's happening with your leads.</p>

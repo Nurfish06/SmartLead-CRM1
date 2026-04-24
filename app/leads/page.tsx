@@ -17,18 +17,26 @@ export default function LeadsPage() {
   async function loadLeads() {
     setLoading(true);
     try {
-      const { data } = await supabase
+      const { data, error } = await supabase
         .from("leads")
         .select("*")
         .order("created_at", { ascending: false });
       
+      if (error) {
+        console.error("Supabase Fetch Error:", error);
+      }
+
+      console.log("Raw Leads List:", data);
+      
       setLeads(data || []);
+
     } catch (error) {
       console.error("Error loading leads:", error);
     } finally {
       setLoading(false);
     }
   }
+
 
 
   const filteredLeads = leads.filter(lead => 
