@@ -1,36 +1,54 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# LeadPulse AI
 
-## Getting Started
+LeadPulse AI is an automated AI-powered lead management system that captures, classifies, and routes leads in real time using intelligent workflows.
 
-First, run the development server:
+It combines automation, AI classification, and a modern dashboard to help businesses respond to leads faster and improve conversion rates.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🚀 Features
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- AI-powered lead classification (HOT / WARM / COLD)
+- Automated email responses based on lead quality
+- Real-time lead storage using Supabase
+- Interactive CRM dashboard built with Next.js
+- Filtering system by lead status
+- Scalable workflow automation using n8n
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## 🧠 System Architecture
 
-To learn more about Next.js, take a look at the following resources:
+LeadPulse AI is built using a modern full-stack automation architecture:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Webhook → Lead ingestion
+- AI Layer → Lead classification
+- Workflow Engine (n8n) → Automation logic
+- Database (Supabase) → Data storage
+- Frontend (Next.js) → CRM dashboard
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## 🛠️ Tech Stack
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- Next.js (Frontend Dashboard)
+- Supabase (Database & API)
+- n8n (Automation workflows)
+- OpenAI / AI Model (Lead classification)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## 📊 Lead Flow
+
+1. User submits a lead via webhook
+2. AI classifies lead as HOT / WARM / COLD
+3. Workflow routes lead based on status:
+   - HOT → Immediate email + alert
+   - WARM → Follow-up email
+   - COLD → Stored for analytics only
+4. All leads are stored in the CRM database
+5. Dashboard displays real-time lead data
+
+---
+
+## 📁 Project Structure
