@@ -51,4 +51,4 @@ LeadPulse AI is built using a modern full-stack automation architecture:
 
 ---
 
-## 📁 Project Structure
+
