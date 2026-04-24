@@ -1,50 +1,24 @@
-"use client";
-
-import { useEffect, useState } from "react";
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@/utils/supabase/server";
 import Link from "next/link";
 
-export default function Dashboard() {
-  const [stats, setStats] = useState({
-    HOT: 0,
-    WARM: 0,
-    COLD: 0,
-    TOTAL: 0,
+export default async function Dashboard() {
+  const supabase = await createClient();
+
+  // Fetch stats
+  const { data: leadsData } = await supabase.from("leads").select("status");
+  
+  const stats = { HOT: 0, WARM: 0, COLD: 0, TOTAL: 0 };
+  leadsData?.forEach((d: any) => {
+    stats[d.status as keyof typeof stats] = (stats[d.status as keyof typeof stats] || 0) + 1;
+    stats.TOTAL++;
   });
-  const [recentLeads, setRecentLeads] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    loadData();
-  }, []);
-
-  async function loadData() {
-    setLoading(true);
-    try {
-      // Fetch stats
-      const { data: leadsData } = await supabase.from("leads").select("status");
-      
-      const counts = { HOT: 0, WARM: 0, COLD: 0, TOTAL: 0 };
-      leadsData?.forEach((d: any) => {
-        counts[d.status] = (counts[d.status] || 0) + 1;
-        counts.TOTAL++;
-      });
-      setStats(counts);
-
-      // Fetch recent leads
-      const { data: recent } = await supabase
-        .from("leads")
-        .select("*")
-        .order("created_at", { ascending: false })
-        .limit(5);
-      
-      setRecentLeads(recent || []);
-    } catch (error) {
-      console.error("Error loading dashboard data:", error);
-    } finally {
-      setLoading(false);
-    }
-  }
+  // Fetch recent leads
+  const { data: recentLeads } = await supabase
+    .from("leads")
+    .select("*")
+    .order("created_at", { ascending: false })
+    .limit(5);
 
   return (
     <div className="p-8 max-w-7xl mx-auto space-y-12">
@@ -99,11 +73,7 @@ export default function Dashboard() {
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5">
-              {loading ? (
-                <tr>
-                  <td colSpan={4} className="px-6 py-12 text-center text-gray-500">Loading leads...</td>
-                </tr>
-              ) : recentLeads.length === 0 ? (
+              {!recentLeads || recentLeads.length === 0 ? (
                 <tr>
                   <td colSpan={4} className="px-6 py-12 text-center text-gray-500">No leads found yet.</td>
                 </tr>
@@ -137,4 +107,5 @@ export default function Dashboard() {
       </div>
     </div>
   );
-}
+}
+

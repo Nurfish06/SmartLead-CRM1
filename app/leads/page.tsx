@@ -1,13 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@/utils/supabase/client";
 import Link from "next/link";
 
 export default function LeadsPage() {
   const [leads, setLeads] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
+  const supabase = createClient();
 
   useEffect(() => {
     loadLeads();
@@ -28,6 +29,7 @@ export default function LeadsPage() {
       setLoading(false);
     }
   }
+
 
   const filteredLeads = leads.filter(lead => 
     (lead.name?.toLowerCase().includes(search.toLowerCase())) ||
